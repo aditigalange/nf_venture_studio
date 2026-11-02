@@ -222,11 +222,11 @@ export const NFStartupJourneySection: React.FC<NFStartupJourneySectionProps> = (
 
       <div className="section-shell space-y-16">
 
-        
+
 
         {/* Section Heading */}
 
-        <div className="max-w-3xl space-y-3">
+        <div className="max-w-3xl mx-auto text-center space-y-3">
 
           <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wider uppercase bg-[#103B82]/10 text-[#1746A2] dark:bg-[#18386B] dark:text-[#E8C85A] border border-[#1746A2]/20 shadow-xs">
 
@@ -286,15 +286,13 @@ export const NFStartupJourneySection: React.FC<NFStartupJourneySectionProps> = (
 
                   }}
 
-                  className={`rounded-2xl border transition-all duration-300 flex flex-col justify-between cursor-pointer group overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:ring-offset-2 ${
+                  className={`rounded-2xl border transition-all duration-300 flex flex-col justify-between cursor-pointer group overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:ring-offset-2 ${isSelected
 
-                    isSelected
+                    ? 'bg-gradient-to-b from-[#DCEEFF]/60 to-white dark:from-[#18386B] dark:to-[#10264A] border-[#1746A2] shadow-xl -translate-y-1.5 ring-2 ring-[#1746A2]/40'
 
-                      ? 'bg-gradient-to-b from-[#DCEEFF]/60 to-white dark:from-[#18386B] dark:to-[#10264A] border-[#1746A2] shadow-xl -translate-y-1.5 ring-2 ring-[#1746A2]/40'
+                    : 'bg-[#F8FAFC] dark:bg-[#071A38]/70 border-slate-200 dark:border-[#103B82] shadow-sm hover:shadow-lg hover:-translate-y-1'
 
-                      : 'bg-[#F8FAFC] dark:bg-[#071A38]/70 border-slate-200 dark:border-[#103B82] shadow-sm hover:shadow-lg hover:-translate-y-1'
-
-                  }`}
+                    }`}
 
                 >
 
@@ -320,7 +318,7 @@ export const NFStartupJourneySection: React.FC<NFStartupJourneySectionProps> = (
 
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent pointer-events-none" />
 
-                    
+
 
                     {/* Stage Number Badge */}
 
@@ -334,15 +332,13 @@ export const NFStartupJourneySection: React.FC<NFStartupJourneySectionProps> = (
 
                     <div
 
-                      className={`absolute bottom-2.5 right-2.5 w-8 h-8 rounded-lg flex items-center justify-center shadow-md backdrop-blur-xs transition-colors ${
+                      className={`absolute bottom-2.5 right-2.5 w-8 h-8 rounded-lg flex items-center justify-center shadow-md backdrop-blur-xs transition-colors ${isSelected
 
-                        isSelected
+                        ? 'bg-[#1746A2] text-white ring-2 ring-white/50'
 
-                          ? 'bg-[#1746A2] text-white ring-2 ring-white/50'
+                        : 'bg-white/95 dark:bg-[#18386B]/95 text-[#1746A2] dark:text-[#E8C85A]'
 
-                          : 'bg-white/95 dark:bg-[#18386B]/95 text-[#1746A2] dark:text-[#E8C85A]'
-
-                      }`}
+                        }`}
 
                     >
 

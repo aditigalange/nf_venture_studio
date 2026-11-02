@@ -10,6 +10,8 @@ app.disableHardwareAcceleration();
 
 if (!isDev) {
   process.env.DATABASE_URL = `file:${path.join(app.getPath('userData'), 'hardware-service-pro.db')}`;
+} else if (!process.env.DATABASE_URL) {
+  process.env.DATABASE_URL = `file:${path.resolve(__dirname, '../../prisma/database/hardware-service-pro.db')}`;
 }
 
 let mainWindow: BrowserWindow | null = null;

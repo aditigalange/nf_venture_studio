@@ -34,7 +34,7 @@ export const NFHero3DVisual: React.FC<NFHero3DVisualProps> = ({ isDark = false }
           <img
             src={!imgError ? officialEmblemImg : fallbackEmblemImg}
             alt="NF Venture Studio Official Emblem"
-            className="w-auto h-60 sm:h-72 lg:h-80 max-w-[90%] object-contain drop-shadow-2xl select-none"
+            className="w-auto h-60 sm:h-72 lg:h-80 max-w-[90%] object-contain drop-shadow-2xl dark:drop-shadow-none select-none"
             loading="eager"
             decoding="async"
             onError={() => setImgError(true)}

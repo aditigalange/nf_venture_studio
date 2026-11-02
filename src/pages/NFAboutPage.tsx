@@ -40,7 +40,6 @@ export const NFAboutPage: React.FC = () => {
   const [isAppModalOpen, setIsAppModalOpen] = useState(false);
   const [selectedTrack, setSelectedTrack] = useState('student');
   const [showScrollTop, setShowScrollTop] = useState(false);
-  const [activeStep, setActiveStep] = useState(0);
 
   useScrollReveal();
 
@@ -267,7 +266,7 @@ export const NFAboutPage: React.FC = () => {
                 <img
                   src={isDark ? officialLogoFullDark : officialLogoFull}
                   alt="NF Venture Studio Official Logo"
-                  className="w-full max-h-60 sm:max-h-72 object-contain drop-shadow-xl hover:scale-105 transition-transform duration-300"
+                  className="w-full max-h-60 sm:max-h-72 object-contain drop-shadow-xl dark:drop-shadow-none hover:scale-105 transition-transform duration-300"
                 />
               </div>
             </div>
@@ -475,82 +474,51 @@ export const NFAboutPage: React.FC = () => {
               </p>
             </div>
 
-            {/* Interactive Timeline Tabs */}
+            {/* Incubation Lifecycle 4-Stage Cards (Static Light Blue) */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {lifecycleSteps.map((s, idx) => {
                 const Icon = s.icon;
-                const isActive = activeStep === idx;
                 return (
-                  <button
+                  <div
                     key={idx}
-                    type="button"
-                    onClick={() => setActiveStep(idx)}
-                    className={`p-5 rounded-2xl text-left transition-all duration-300 border cursor-pointer flex flex-col justify-between ${
-                      isActive
-                        ? 'bg-gradient-to-b from-[#1746A2] to-[#102E66] text-white border-2 border-[#D4AF37] shadow-xl scale-[1.02]'
-                        : 'bg-white dark:bg-[#0A1D3B]/90 text-[#071A38] dark:text-white border-slate-200 dark:border-[#1A3D73] hover:border-[#D4AF37]/50 shadow-sm'
-                    }`}
+                    className="p-5 sm:p-6 rounded-2xl text-left border flex flex-col justify-between transition-all duration-300 bg-gradient-to-b from-[#EBF4FE] to-[#DBEEFD] dark:from-[#17437F] dark:to-[#10305C] text-[#071A38] dark:text-white border-[#B8D7FA] dark:border-[#387ACB]/60 shadow-sm hover:shadow-md"
                   >
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
-                        <span
-                          className={`text-lg font-mono font-black ${
-                            isActive ? 'text-[#D4AF37]' : 'text-[#D4AF37]'
-                          }`}
-                        >
+                        <span className="text-lg font-mono font-black text-[#1746A2] dark:text-[#E8C85A]">
                           {s.step}
                         </span>
-                        <div
-                          className={`w-9 h-9 rounded-xl flex items-center justify-center ${
-                            isActive
-                              ? 'bg-white/15 text-white'
-                              : 'bg-slate-100 dark:bg-[#103B82]/50 text-[#1746A2] dark:text-[#E8C85A]'
-                          }`}
-                        >
+                        <div className="w-9 h-9 rounded-xl flex items-center justify-center bg-white/95 dark:bg-[#1D4F94] text-[#1746A2] dark:text-[#E8C85A] shadow-xs border border-[#BFDBFE] dark:border-[#387ACB]/50">
                           <Icon className="w-4 h-4" />
                         </div>
                       </div>
 
                       <div>
-                        <span
-                          className={`text-[10px] font-mono uppercase tracking-wider block ${
-                            isActive ? 'text-slate-200' : 'text-[#52627A] dark:text-slate-400'
-                          }`}
-                        >
+                        <span className="text-[10px] font-mono font-bold uppercase tracking-wider block text-[#1746A2] dark:text-sky-300">
                           {s.phase}
                         </span>
-                        <h4 className="text-base font-extrabold tracking-tight mt-0.5">
+                        <h4 className="text-base font-extrabold tracking-tight mt-0.5 text-[#071A38] dark:text-white">
                           {s.title}
                         </h4>
                       </div>
 
-                      <p
-                        className={`text-xs leading-relaxed font-normal ${
-                          isActive ? 'text-slate-200' : 'text-[#52627A] dark:text-slate-300'
-                        }`}
-                      >
+                      <p className="text-xs leading-relaxed font-normal text-[#334155] dark:text-slate-200">
                         {s.desc}
                       </p>
                     </div>
 
-                    <div className="pt-3 mt-3 border-t border-white/20 dark:border-slate-800 space-y-1">
+                    <div className="pt-3.5 mt-3.5 border-t border-[#C3DCF7] dark:border-[#1E4D8A] space-y-1.5">
                       {s.deliverables.map((del, dIdx) => (
                         <div
                           key={dIdx}
-                          className={`flex items-center gap-1.5 text-[11px] ${
-                            isActive ? 'text-white/90' : 'text-[#52627A] dark:text-slate-300'
-                          }`}
+                          className="flex items-center gap-1.5 text-[11px] text-[#1E293B] dark:text-slate-200"
                         >
-                          <CheckCircle2
-                            className={`w-3 h-3 ${
-                              isActive ? 'text-[#D4AF37]' : 'text-[#1746A2] dark:text-[#60A5FA]'
-                            }`}
-                          />
-                          <span>{del}</span>
+                          <CheckCircle2 className="w-3.5 h-3.5 text-[#1746A2] dark:text-sky-300 shrink-0" />
+                          <span className="font-medium">{del}</span>
                         </div>
                       ))}
                     </div>
-                  </button>
+                  </div>
                 );
               })}
             </div>

@@ -24,7 +24,7 @@ import {
   Sparkles,
   MapPin,
 } from 'lucide-react';
-import ashokPatilImg from '../../assets/ashok_patil_desk.png';
+import ashokPatilImg from '../../assets/ashok_patil_ceo.jpg';
 import nileshSirImg from '../../assets/nilesh_sir.jpeg';
 import presidentSignatureImg from '../../assets/president_signature.png';
 import vicePresidentImg from '../../assets/voice_president.jpeg';
@@ -201,7 +201,7 @@ export const NFTeamPage: React.FC = () => {
                       src={officialEmblem}
                       alt="NF Venture Studio - Official Logo"
                       decoding="async"
-                      className="w-full h-full object-contain filter drop-shadow-sm"
+                      className="w-full h-full object-contain filter drop-shadow-sm dark:drop-shadow-none"
                     />
                   </div>
                   <div className="space-y-1">
@@ -523,16 +523,17 @@ export const NFTeamPage: React.FC = () => {
                   {activeTab === 'from-ceos-desk' && (
                     <div className="space-y-6 sm:space-y-8 animate-fade-in flex flex-col justify-between">
                       {/* Leader Portrait & Header Info */}
-                      <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-center sm:items-start text-center sm:text-left">
-                        {/* Small Photograph */}
-                        <div className="w-24 sm:w-28 md:w-32 aspect-[3/4] rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 shadow-xs shrink-0 mx-auto sm:mx-0">
+                      <div className="flex flex-col sm:flex-row gap-5 sm:gap-7 items-center sm:items-start text-center sm:text-left">
+                        {/* Executive CEO Photograph */}
+                        <div className="w-32 sm:w-40 md:w-48 aspect-square rounded-2xl overflow-hidden border-2 border-[#D4AF37]/50 bg-slate-900 shadow-xl shrink-0 mx-auto sm:mx-0 group relative">
                           <img
                             src={ceoMember.imageSrc}
                             alt="Mr. Ashok K. Patil - Chief Executive Officer, NF Venture Studio"
-                            className="w-full h-full object-cover object-[center_15%] block select-none"
+                            className="w-full h-full object-cover object-[center_25%] block select-none group-hover:scale-105 transition-transform duration-500"
                             loading="eager"
                             decoding="async"
                           />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
                         </div>
 
                         <div className="flex-1 min-w-0 space-y-1.5">
@@ -634,6 +635,42 @@ export const NFTeamPage: React.FC = () => {
                         <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">
                           Executive working pillars driving incubation operations, fiscal governance, and founder acquisition.
                         </p>
+                      </div>
+
+                      {/* Featured CEO Executive Leadership Card */}
+                      <div className={`p-5 sm:p-6 rounded-2xl border transition-all duration-200 shadow-xs flex flex-col sm:flex-row gap-5 items-center sm:items-start ${
+                        isDark ? 'bg-slate-900 border-slate-700' : 'bg-[#FAFCFE] border-[#DCE3EC]'
+                      }`}>
+                        <div className="w-28 sm:w-36 aspect-square rounded-xl overflow-hidden border-2 border-[#D4AF37]/50 shadow-md shrink-0 bg-slate-900">
+                          <img
+                            src={ceoMember.imageSrc}
+                            alt={`${ceoMember.name} - ${ceoMember.designation}`}
+                            className="w-full h-full object-cover object-[center_25%]"
+                            loading="eager"
+                          />
+                        </div>
+                        <div className="flex-1 space-y-2 text-center sm:text-left">
+                          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-[10px] font-mono font-bold uppercase tracking-wider bg-[#DCEEFF] dark:bg-slate-800 text-[#1746A2] dark:text-sky-300 border border-[#DCE3EC] dark:border-slate-700">
+                            <User className="w-3 h-3 text-[#D4AF37]" />
+                            <span>Venture Executive Leadership</span>
+                          </div>
+                          <h3 className="text-lg sm:text-xl font-extrabold text-[#1746A2] dark:text-white">
+                            {ceoMember.name}
+                          </h3>
+                          <p className="text-xs font-bold text-[#D4AF37]">
+                            {ceoMember.designation}
+                          </p>
+                          <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
+                            {ceoMember.focus}
+                          </p>
+                          <div className="pt-2 flex flex-wrap gap-2 justify-center sm:justify-start">
+                            {ceoMember.responsibilities?.map((resp, rIdx) => (
+                              <span key={rIdx} className="px-2.5 py-1 rounded-lg text-[11px] font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                                &bull; {resp}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
                       </div>
 
                       {/* Team Grid: Consistent Professional Portrait Sizes */}

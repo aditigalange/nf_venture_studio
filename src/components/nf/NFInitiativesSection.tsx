@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   FlaskConical,
   Server,
@@ -33,13 +33,41 @@ function CardSlider<T>({
   items,
   title,
   renderCard,
-  desktopItems = 2,
-  autoPlayInterval = 4000,
+  desktopItems = 3,
+  autoPlayInterval = 3500,
 }: CardSliderProps<T>) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [visibleItems, setVisibleItems] = useState(desktopItems);
 
-  const maxIndex = Math.max(0, items.length - desktopItems);
+  useEffect(() => {
+    const updateVisible = () => {
+      if (typeof window === 'undefined') return;
+      if (window.innerWidth < 640) {
+        setVisibleItems(1);
+      } else if (window.innerWidth < 1024) {
+        setVisibleItems(2);
+      } else {
+        setVisibleItems(desktopItems);
+      }
+    };
+    updateVisible();
+    window.addEventListener('resize', updateVisible);
+    return () => window.removeEventListener('resize', updateVisible);
+  }, [desktopItems]);
+
+  const maxIndex = Math.max(0, items.length - visibleItems);
+
+  // Auto-slide effect
+  useEffect(() => {
+    if (isPaused || autoPlayInterval <= 0 || maxIndex <= 0) return;
+
+    const timer = setInterval(() => {
+      setCurrentIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
+    }, autoPlayInterval);
+
+    return () => clearInterval(timer);
+  }, [isPaused, autoPlayInterval, maxIndex]);
 
   const prevSlide = () => {
     setCurrentIndex((prev) => (prev === 0 ? maxIndex : prev - 1));
@@ -54,12 +82,19 @@ function CardSlider<T>({
       className="space-y-4"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
+      onTouchStart={() => setIsPaused(true)}
+      onTouchEnd={() => setIsPaused(false)}
     >
       {/* Slider Top Controls */}
       <div className="flex items-center justify-between px-1">
-        <span className="text-xs sm:text-sm font-bold text-[#071A38] dark:text-white uppercase tracking-wider">
-          {title}
-        </span>
+        <div className="flex items-center gap-2">
+          <span className="text-xs sm:text-sm font-bold text-[#071A38] dark:text-white uppercase tracking-wider">
+            {title}
+          </span>
+          <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#D4AF37]/15 text-[#D4AF37] font-bold">
+            Auto-sliding
+          </span>
+        </div>
 
         <div className="flex items-center gap-2">
           {/* Progress Indicator Dots */}
@@ -70,7 +105,7 @@ function CardSlider<T>({
                 type="button"
                 onClick={() => setCurrentIndex(idx)}
                 aria-label={`Go to slide ${idx + 1}`}
-                className={`h-2 rounded-full transition-all duration-300 ${
+                className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
                   currentIndex === idx
                     ? 'w-6 bg-[#1746A2] dark:bg-[#D4AF37]'
                     : 'w-2 bg-slate-300 dark:bg-slate-700 hover:bg-slate-400'
@@ -83,7 +118,7 @@ function CardSlider<T>({
             type="button"
             onClick={prevSlide}
             aria-label="Previous slide"
-            className="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#0A1D3B] text-slate-700 dark:text-slate-200 flex items-center justify-center hover:bg-[#1746A2] hover:text-white dark:hover:bg-[#D4AF37] dark:hover:text-[#071A38] transition-colors shadow-xs"
+            className="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#0A1D3B] text-slate-700 dark:text-slate-200 flex items-center justify-center hover:bg-[#1746A2] hover:text-white dark:hover:bg-[#D4AF37] dark:hover:text-[#071A38] transition-colors shadow-xs cursor-pointer"
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
@@ -91,7 +126,7 @@ function CardSlider<T>({
             type="button"
             onClick={nextSlide}
             aria-label="Next slide"
-            className="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#0A1D3B] text-slate-700 dark:text-slate-200 flex items-center justify-center hover:bg-[#1746A2] hover:text-white dark:hover:bg-[#D4AF37] dark:hover:text-[#071A38] transition-colors shadow-xs"
+            className="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#0A1D3B] text-slate-700 dark:text-slate-200 flex items-center justify-center hover:bg-[#1746A2] hover:text-white dark:hover:bg-[#D4AF37] dark:hover:text-[#071A38] transition-colors shadow-xs cursor-pointer"
           >
             <ChevronRight className="w-4 h-4" />
           </button>
@@ -101,15 +136,19 @@ function CardSlider<T>({
       {/* Slider Track Container */}
       <div className="overflow-hidden rounded-2xl py-2 -my-2">
         <div
-          className="flex transition-transform duration-500 ease-out gap-4 sm:gap-5"
+          className="flex transition-transform duration-700 ease-in-out gap-4 sm:gap-5"
           style={{
-            transform: `translateX(-${currentIndex * (100 / desktopItems + 1.2)}%)`,
+            transform: `translateX(calc(-${currentIndex} * ((100% + 20px) / ${visibleItems})))`,
           }}
         >
           {items.map((item, idx) => (
             <div
               key={idx}
-              className="shrink-0 w-full sm:w-[calc(50%-10px)] lg:w-[calc(33.333%-14px)]"
+              className="shrink-0"
+              style={{
+                width: visibleItems === 1 ? '100%' : `calc((100% - ${(visibleItems - 1) * 20}px) / ${visibleItems})`,
+                minWidth: visibleItems === 1 ? '100%' : `calc((100% - ${(visibleItems - 1) * 20}px) / ${visibleItems})`,
+              }}
             >
               {renderCard(item, idx, idx === currentIndex)}
             </div>
@@ -160,6 +199,34 @@ export const NFInitiativesSection: React.FC<NFInitiativesSectionProps> = ({
     { num: '06', title: 'Access Control', desc: 'Manage user accounts, permissions and system access.', icon: ShieldCheck },
     { num: '07', title: 'Digital Innovation', desc: 'Implement automation and digital solutions for efficiency.', icon: Activity },
     { num: '08', title: 'Event Support', desc: 'Provide technical support for webinars, hackathons & events.', icon: Globe2 },
+  ];
+
+  // Support Areas for Research Commercialization
+  const supportAreas = [
+    {
+      title: 'Technology Scouting',
+      desc: 'Identify and nurture high-potential innovations and patents from academia.',
+      icon: Compass,
+      tag: 'Scouting',
+    },
+    {
+      title: 'Prototype Development',
+      desc: 'Support in product development, testing benches, and real-world validation.',
+      icon: Cpu,
+      tag: 'Prototyping',
+    },
+    {
+      title: 'IP Management',
+      desc: 'Guidance on patents, trademarks, licensing, and corporate structuring.',
+      icon: ShieldCheck,
+      tag: 'IP Protection',
+    },
+    {
+      title: 'Business Enablement',
+      desc: 'Mentorship, market connect, industry pilots, and investor readiness.',
+      icon: TrendingUp,
+      tag: 'Scale & Market',
+    },
   ];
 
   return (
@@ -272,39 +339,45 @@ export const NFInitiativesSection: React.FC<NFInitiativesSectionProps> = ({
                 }}
               />
 
-              {/* 4 Support Areas */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                {[
-                  {
-                    title: 'Technology Scouting',
-                    desc: 'Identify and nurture high-potential innovations and patents from academia.',
-                  },
-                  {
-                    title: 'Prototype Development',
-                    desc: 'Support in product development, testing benches, and real-world validation.',
-                  },
-                  {
-                    title: 'IP Management',
-                    desc: 'Guidance on patents, trademarks, licensing, and corporate structuring.',
-                  },
-                  {
-                    title: 'Business Enablement',
-                    desc: 'Mentorship, market connect, industry pilots, and investor readiness.',
-                  },
-                ].map((sup, idx) => (
-                  <div
-                    key={idx}
-                    className="p-5 rounded-2xl bg-white dark:bg-[#071A38]/80 border border-slate-200 dark:border-[#103B82]/50 shadow-sm"
-                  >
-                    <h5 className="text-xs font-black text-[#1746A2] dark:text-sky-300 uppercase tracking-wider">
-                      {sup.title}
-                    </h5>
-                    <p className="text-xs text-[#52627A] dark:text-slate-300 mt-1.5 leading-relaxed font-medium">
-                      {sup.desc}
-                    </p>
-                  </div>
-                ))}
-              </div>
+              {/* 4 Support Areas with Animated Auto Slider */}
+              <CardSlider
+                items={supportAreas}
+                title="Commercialization Support Areas"
+                desktopItems={3}
+                autoPlayInterval={4500}
+                renderCard={(sup, idx, isPrimary) => {
+                  const Icon = sup.icon;
+                  return (
+                    <div
+                      className={`h-full p-5 rounded-2xl transition-all duration-300 flex flex-col justify-between group ${
+                        isPrimary
+                          ? 'bg-white dark:bg-[#0B1E3D] border-2 border-[#D4AF37] shadow-lg shadow-[#D4AF37]/15 scale-[1.01]'
+                          : 'bg-white dark:bg-[#0A1D3B]/90 border border-slate-200 dark:border-[#1A3D73] hover:border-[#D4AF37]/60 shadow-sm hover:shadow-md'
+                      }`}
+                    >
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#1746A2] dark:text-[#E8C85A] px-2 py-0.5 rounded-md bg-[#DCEEFF]/60 dark:bg-[#18386B] border border-[#1746A2]/20">
+                            {sup.tag}
+                          </span>
+                          <div className="w-8 h-8 rounded-xl bg-[#D4AF37]/10 flex items-center justify-center text-[#D4AF37]">
+                            <Icon className="w-4 h-4" />
+                          </div>
+                        </div>
+
+                        <div>
+                          <h5 className="text-sm sm:text-base font-extrabold text-[#071A38] dark:text-white tracking-tight">
+                            {sup.title}
+                          </h5>
+                          <p className="text-xs text-[#52627A] dark:text-slate-300 mt-1.5 leading-relaxed font-normal">
+                            {sup.desc}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                }}
+              />
             </div>
           )}
 

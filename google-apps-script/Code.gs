@@ -2,7 +2,7 @@
  * NF VENTURE STUDIO — GOOGLE APPS SCRIPT
  * Incubation Application Processor & Automated Email Notification System
  *
- * Organization: Naree Foundation (NF Venture Studio)
+ * Organization: NF Venture Studio
  * Target Notification Email: ncfitcell@gmail.com
  *
  * Workflow:
@@ -22,7 +22,7 @@ const CONFIG = {
   
   // Organization Details
   STUDIO_NAME: "NF Venture Studio",
-  FOUNDATION_NAME: "Naree Foundation",
+  FOUNDATION_NAME: "NF Venture Studio",
   HELPLINE_PHONE: "+91 92091 12577",
   PRIMARY_COLOR: "#123B73",   // NF Navy
   ACCENT_COLOR: "#D9A72E",    // NF Gold
@@ -369,7 +369,7 @@ function sendApplicationNotificationEmail(app) {
   const plainTextBody = [
     "============================================================",
     "NEW INCUBATION APPLICATION RECEIVED — " + CONFIG.STUDIO_NAME,
-    "Naree Foundation Initiative",
+    "NF Venture Studio Initiative",
     "============================================================",
     "",
     "INTERNAL REMINDER:",
@@ -427,7 +427,7 @@ function sendApplicationNotificationEmail(app) {
                       New Incubation Application Received
                     </h1>
                     <p style="color: #94BAE9; font-size: 13px; margin: 0; font-weight: 500;">
-                      NF Venture Studio &middot; Naree Foundation
+                      NF Venture Studio
                     </p>
                   </td>
                 </tr>
@@ -611,7 +611,7 @@ function sendApplicationNotificationEmail(app) {
           <tr>
             <td style="background-color: #F8FAFD; padding: 18px 30px; border-top: 1px solid #E2E8F0; text-align: center; font-size: 11px; color: #718096; line-height: 1.45;">
               <p style="margin: 0 0 4px 0; font-weight: 600; color: #4A5568;">
-                NF Venture Studio &middot; Naree Foundation Incubation Center
+                NF Venture Studio Incubation Center
               </p>
               <p style="margin: 0;">
                 Nigdi, Pune, Maharashtra &middot; Helpline: ${CONFIG.HELPLINE_PHONE} &middot; <a href="mailto:${CONFIG.NOTIFICATION_EMAIL}" style="color: #123B73; text-decoration: none;">${CONFIG.NOTIFICATION_EMAIL}</a>

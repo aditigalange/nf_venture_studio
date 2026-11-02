@@ -91,35 +91,18 @@ export const NFPartnershipSection: React.FC<NFPartnershipSectionProps> = ({
     >
       <div className="section-shell space-y-16">
         
-        {/* Section Heading with Authentic Handshake Photo */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          <div className="lg:col-span-8 space-y-3">
-            <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wider uppercase bg-slate-100 dark:bg-[#103B82] text-[#1746A2] dark:bg-[#18386B] dark:text-[#E8C85A] border border-[#1746A2]/20">
-              <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
-              <span>Partnerships &amp; Engagement</span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#071A38] dark:text-white tracking-tight">
-              Stronger Together for a Bigger Impact
-            </h2>
-            <p className="text-sm sm:text-base text-[#52627A] dark:text-slate-300 leading-relaxed font-normal max-w-2xl">
-              NF Venture Studio collaborates with academic institutions, industry partners, investors and government bodies to build a robust and inclusive startup ecosystem.
-            </p>
+        {/* Section Heading */}
+        <div className="max-w-3xl mx-auto text-center space-y-3">
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wider uppercase bg-slate-100 dark:bg-[#103B82] text-[#1746A2] dark:bg-[#18386B] dark:text-[#E8C85A] border border-[#1746A2]/20">
+            <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
+            <span>Partnerships &amp; Engagement</span>
           </div>
-
-          <div className="lg:col-span-4 flex justify-center lg:justify-end">
-            <div className="relative rounded-2xl overflow-hidden border-2 border-[#D4AF37]/40 shadow-xl max-w-xs group">
-              <img
-                src="/assets/photos/handshake.jpg"
-                alt="Indian startup founders and enterprise partners collaborating at innovation workshop"
-                className="w-full h-36 object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#10264A]/90 to-transparent flex items-end p-3">
-                <span className="text-[11px] font-bold text-[#D4AF37] uppercase tracking-wider">
-                  Collaboration Today &bull; A Brighter Tomorrow
-                </span>
-              </div>
-            </div>
-          </div>
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#071A38] dark:text-white tracking-tight">
+            Stronger Together for a Bigger Impact
+          </h2>
+          <p className="text-sm sm:text-base text-[#52627A] dark:text-slate-300 leading-relaxed font-normal max-w-2xl mx-auto">
+            NF Venture Studio collaborates with academic institutions, industry partners, investors and government bodies to build a robust and inclusive startup ecosystem.
+          </p>
         </div>
 
         {/* 4 Partners Grid */}

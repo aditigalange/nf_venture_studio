@@ -66,7 +66,7 @@ export const createServiceCall = async (req: Request, res: Response): Promise<vo
   try {
     const validation = serviceCallSchema.safeParse(req.body);
     if (!validation.success) {
-      res.status(400).json({ success: false, message: 'Validation error', error: validation.error.errors });
+      res.status(400).json({ success: false, message: 'Validation error', error: (validation.error as any).issues || (validation.error as any).errors });
       return;
     }
 
@@ -97,7 +97,7 @@ export const updateServiceCall = async (req: Request, res: Response): Promise<vo
     const validation = serviceCallSchema.safeParse(req.body);
     
     if (!validation.success) {
-      res.status(400).json({ success: false, message: 'Validation error', error: validation.error.errors });
+      res.status(400).json({ success: false, message: 'Validation error', error: (validation.error as any).issues || (validation.error as any).errors });
       return;
     }
 

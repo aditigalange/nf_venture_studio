@@ -48,10 +48,12 @@ import { NFTeamPage } from './pages/NFTeamPage';
 
 import { NFContactPage } from './pages/NFContactPage';
 
+import { NFEcosystemPage } from './pages/NFEcosystemPage';
 import { NFDigitalCXOPage } from './pages/NFDigitalCXOPage';
 import { NFFundingGrantsPage } from './pages/NFFundingGrantsPage';
 import { NFIICPage } from './pages/NFIICPage';
 import { NFIPRPage } from './pages/NFIPRPage';
+import { NFITCellPage } from './pages/NFITCellPage';
 
 // Settings, Backup, Users, Calendar, Reports
 
@@ -113,6 +115,9 @@ function App() {
 
         <Route path="/from-executive-directors-desk" element={<Navigate to="/team" replace />} />
 
+        <Route path="/ecosystem" element={<NFEcosystemPage />} />
+        <Route path="/innovation-ecosystem" element={<Navigate to="/ecosystem" replace />} />
+
         <Route path="/contact" element={<NFContactPage />} />
 
         <Route path="/contact-us" element={<NFContactPage />} />
@@ -131,6 +136,10 @@ function App() {
         <Route path="/ipr" element={<NFIPRPage />} />
         <Route path="/intellectual-property" element={<Navigate to="/ipr" replace />} />
         <Route path="/intellectual-property-rights" element={<Navigate to="/ipr" replace />} />
+        <Route path="/it-cell" element={<NFITCellPage />} />
+        <Route path="/itcell" element={<Navigate to="/it-cell" replace />} />
+        <Route path="/ecosystem/it-cell" element={<Navigate to="/it-cell" replace />} />
+        <Route path="/ecosystem/itcell" element={<Navigate to="/it-cell" replace />} />
 
         {/* Management & Dashboard System */}
 

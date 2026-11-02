@@ -640,7 +640,7 @@ export const NFApplicationForm: React.FC<NFApplicationFormProps> = ({
               </span>
             </div>
             <p className="text-[11px] sm:text-xs text-slate-700 dark:text-slate-300 leading-snug">
-              I hereby give voluntary consent to <strong>NF Venture Studio (Naree Foundation)</strong> to collect and process my personal contact details and proposal data in accordance with the <strong>Digital Personal Data Protection (DPDP) Act, 2023</strong>, solely for the purpose of incubation review, mentorship evaluation, and official communication.
+              I hereby give voluntary consent to <strong>NF Venture Studio</strong> to collect and process my personal contact details and proposal data in accordance with the <strong>Digital Personal Data Protection (DPDP) Act, 2023</strong>, solely for the purpose of incubation review, mentorship evaluation, and official communication.
             </p>
           </div>
         </label>

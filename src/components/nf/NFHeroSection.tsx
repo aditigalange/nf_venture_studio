@@ -213,7 +213,7 @@ export const NFHeroSection: React.FC<NFHeroSectionProps> = ({
             <div className="absolute -inset-4 rounded-full bg-gradient-to-r from-[#1746A2]/40 via-[#D4AF37]/30 to-[#2864C5]/40 blur-xl opacity-75 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
             
             {/* 3D Shield Emblem */}
-            <div className="relative w-20 h-20 sm:w-26 sm:h-26 md:w-28 md:h-28 flex items-center justify-center filter drop-shadow-xl transition-transform duration-300 group-hover:scale-105">
+            <div className="relative w-20 h-20 sm:w-26 sm:h-26 md:w-28 md:h-28 flex items-center justify-center filter drop-shadow-xl dark:drop-shadow-none transition-transform duration-300 group-hover:scale-105">
               <img
                 src={officialEmblem}
                 alt="NF Venture Studio Official 3D Shield Emblem"

@@ -110,6 +110,15 @@ export const NFFooter: React.FC<NFFooterProps> = ({
               <li>
                 <button
                   type="button"
+                  onClick={() => handleNav('/ecosystem')}
+                  className="hover:text-[#1746A2] dark:hover:text-white hover:underline transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:outline-none rounded-sm"
+                >
+                  Ecosystem
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
                   onClick={() => handleNav('/contact')}
                   className="hover:text-[#1746A2] dark:hover:text-white hover:underline transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:outline-none rounded-sm"
                 >
@@ -186,6 +195,15 @@ export const NFFooter: React.FC<NFFooterProps> = ({
                   className="hover:text-[#1746A2] dark:hover:text-white hover:underline transition-colors text-left cursor-pointer focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:outline-none rounded-sm"
                 >
                   Digital CXO Suite
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  onClick={() => handleNav('/it-cell')}
+                  className="hover:text-[#1746A2] dark:hover:text-white hover:underline transition-colors text-left cursor-pointer focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:outline-none rounded-sm"
+                >
+                  IT Cell &amp; Solutions
                 </button>
               </li>
             </ul>

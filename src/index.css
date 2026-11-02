@@ -342,3 +342,17 @@ img:hover,
     transform: none;
   }
 }
+
+/* Ensure no unwanted white shadow or glow on the brand logo in dark theme */
+.dark img[alt*="NF Venture Studio"],
+.dark img[alt*="Official HD Logo"],
+.dark img[alt*="Official 3D Shield"],
+.dark img[alt*="Official Logo"],
+.dark img[alt*="Emblem"],
+html.dark img[src*="emblem"],
+html.dark img[src*="logo"] {
+  filter: none !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+

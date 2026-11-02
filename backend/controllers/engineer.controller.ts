@@ -52,7 +52,7 @@ export const createEngineer = async (req: Request, res: Response): Promise<void>
   try {
     const validation = engineerSchema.safeParse(req.body);
     if (!validation.success) {
-      res.status(400).json({ success: false, message: 'Validation error', error: validation.error.errors });
+      res.status(400).json({ success: false, message: 'Validation error', error: (validation.error as any).issues || (validation.error as any).errors });
       return;
     }
 
@@ -83,7 +83,7 @@ export const updateEngineer = async (req: Request, res: Response): Promise<void>
     const validation = engineerSchema.safeParse(req.body);
     
     if (!validation.success) {
-      res.status(400).json({ success: false, message: 'Validation error', error: validation.error.errors });
+      res.status(400).json({ success: false, message: 'Validation error', error: (validation.error as any).issues || (validation.error as any).errors });
       return;
     }
 

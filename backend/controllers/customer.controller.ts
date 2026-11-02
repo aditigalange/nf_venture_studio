@@ -112,7 +112,7 @@ export const createCustomer = async (req: Request, res: Response): Promise<void>
             res.status(400).json({
                 success: false,
                 message: 'Validation failed',
-                data: error.errors
+                data: (error as any).issues || (error as any).errors
             });
             return;
         }
@@ -162,7 +162,7 @@ export const updateCustomer = async (req: Request, res: Response): Promise<void>
             res.status(400).json({
                 success: false,
                 message: 'Validation failed',
-                data: error.errors
+                data: (error as any).issues || (error as any).errors
             });
             return;
         }
