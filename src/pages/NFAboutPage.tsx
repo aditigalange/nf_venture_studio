@@ -30,8 +30,6 @@ import {
   Network,
   Activity,
 } from 'lucide-react';
-import officialLogoFull from '../assets/nfvs_official_logo_full.png';
-import officialLogoFullDark from '../assets/nfvs_official_logo_full_darkmode.png';
 import officialEmblem from '../assets/nfvs_official_emblem.png';
 
 export const NFAboutPage: React.FC = () => {
@@ -262,12 +260,21 @@ export const NFAboutPage: React.FC = () => {
 
             {/* Right Emblem Showcase: Pure Logo Display */}
             <div className="lg:col-span-5 relative flex items-center justify-center">
-              <div className="relative w-full max-w-sm sm:max-w-md flex items-center justify-center py-4">
+            <div className="relative w-full max-w-sm sm:max-w-md flex flex-col items-center justify-center py-4 gap-4">
                 <img
-                  src={isDark ? officialLogoFullDark : officialLogoFull}
-                  alt="NF Venture Studio Official Logo"
-                  className="w-full max-h-60 sm:max-h-72 object-contain drop-shadow-xl dark:drop-shadow-none hover:scale-105 transition-transform duration-300"
+                  src={officialEmblem}
+                  alt="NF Venture Studio Official Emblem"
+                  className="w-40 h-40 sm:w-52 sm:h-52 object-contain hover:scale-105 transition-transform duration-300"
                 />
+                <div className="flex flex-col items-center text-center leading-none">
+                  <span className="font-black tracking-[0.14em] uppercase text-xl sm:text-2xl md:text-3xl font-display">
+                    <span className={isDark ? 'text-white' : 'text-[#071A38]'}>NF </span>
+                    <span className="text-[#D4AF37]">VENTURE STUDIO</span>
+                  </span>
+                  <span className="mt-1.5 text-xs font-bold tracking-widest uppercase font-mono text-[#1746A2] dark:text-[#60A5FA]">
+                    IDEAS • INNOVATION • GROWTH
+                  </span>
+                </div>
               </div>
             </div>
           </section>

@@ -39,7 +39,7 @@ export const NFLogo: React.FC<NFLogoProps> = ({
         <img
           src={officialLogoFull}
           alt="NF Venture Studio Official Logo"
-          className={`w-auto ${fullSizeMap[size]} object-contain filter drop-shadow-sm dark:drop-shadow-none`}
+          className={`w-auto ${fullSizeMap[size]} object-contain`}
         />
       </div>
     );
@@ -98,7 +98,7 @@ export const NFLogo: React.FC<NFLogoProps> = ({
     return (
       <div className={`flex flex-col items-center text-center select-none ${className}`}>
         {/* Official HD 3D Shield Emblem */}
-        <div className={`relative shrink-0 ${current.imgSize} flex items-center justify-center filter drop-shadow-md dark:drop-shadow-none mb-2`}>
+        <div className={`relative shrink-0 ${current.imgSize} flex items-center justify-center mb-2`}>
           <img
             src={imgSrc}
             alt="NF Venture Studio Official HD Logo"
@@ -138,7 +138,7 @@ export const NFLogo: React.FC<NFLogoProps> = ({
   return (
     <div className={`inline-flex items-center ${current.gap} select-none ${className}`}>
       {/* Official HD 3D Shield Emblem */}
-      <div className={`relative shrink-0 ${current.imgSize} flex items-center justify-center filter drop-shadow-sm dark:drop-shadow-none`}>
+      <div className={`relative shrink-0 ${current.imgSize} flex items-center justify-center`}>
         <img
           src={imgSrc}
           alt="NF Venture Studio Official HD Logo"

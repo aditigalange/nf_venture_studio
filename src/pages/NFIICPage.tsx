@@ -488,13 +488,13 @@ export const NFIICPage: React.FC = () => {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="flex flex-wrap justify-center gap-6">
               {iicBeneficiaries.map((b, idx) => {
                 const Icon = b.icon;
                 return (
                   <div
                     key={idx}
-                    className="p-6 rounded-2xl bg-white dark:bg-[#071A38] border border-slate-200 dark:border-[#1A3D73] shadow-xs hover:border-[#D4AF37] transition-all space-y-3"
+                    className="w-full sm:w-[calc(50%_-_0.75rem)] lg:w-[calc(25%_-_1.125rem)] p-6 rounded-2xl bg-white dark:bg-[#071A38] border border-slate-200 dark:border-[#1A3D73] shadow-xs hover:border-[#D4AF37] transition-all space-y-3"
                   >
                     <div className="w-10 h-10 rounded-xl bg-[#1746A2]/10 dark:bg-[#103B82]/50 text-[#1746A2] dark:text-[#E8C85A] flex items-center justify-center">
                       <Icon className="w-5 h-5 text-[#D4AF37]" />

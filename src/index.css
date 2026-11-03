@@ -356,3 +356,93 @@ html.dark img[src*="logo"] {
   text-shadow: none !important;
 }
 
+
+/* ============================================================================
+   REALISTIC 3D BOOK PAGE TURNING ANIMATION
+   ============================================================================ */
+@keyframes pageCurlNext {
+  0% {
+    transform: perspective(1600px) rotateY(0deg);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    filter: brightness(1);
+    opacity: 1;
+  }
+  35% {
+    filter: brightness(0.92);
+    box-shadow: -25px 15px 45px rgba(0, 0, 0, 0.6);
+  }
+  75% {
+    filter: brightness(0.7);
+    opacity: 0.9;
+  }
+  100% {
+    transform: perspective(1600px) rotateY(-88deg);
+    box-shadow: -50px 25px 70px rgba(0, 0, 0, 0.8);
+    filter: brightness(0.5);
+    opacity: 0;
+  }
+}
+
+@keyframes pageCurlPrev {
+  0% {
+    transform: perspective(1600px) rotateY(0deg);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    filter: brightness(1);
+    opacity: 1;
+  }
+  35% {
+    filter: brightness(0.92);
+    box-shadow: 25px 15px 45px rgba(0, 0, 0, 0.6);
+  }
+  75% {
+    filter: brightness(0.7);
+    opacity: 0.9;
+  }
+  100% {
+    transform: perspective(1600px) rotateY(88deg);
+    box-shadow: 50px 25px 70px rgba(0, 0, 0, 0.8);
+    filter: brightness(0.5);
+    opacity: 0;
+  }
+}
+
+@keyframes pageRevealIn {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.5;
+    filter: brightness(0.85);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+    filter: brightness(1);
+  }
+}
+
+@keyframes sheenSweepNext {
+  0% {
+    opacity: 0;
+    transform: translateX(0%);
+  }
+  40% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-40%);
+  }
+}
+
+@keyframes sheenSweepPrev {
+  0% {
+    opacity: 0;
+    transform: translateX(0%);
+  }
+  40% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(40%);
+  }
+}

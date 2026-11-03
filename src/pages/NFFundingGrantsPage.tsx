@@ -436,12 +436,15 @@ export const NFFundingGrantsPage: React.FC = () => {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
-              {verifiedSchemes.map((scheme) => {
+              {verifiedSchemes.map((scheme, index) => {
                 const Icon = scheme.icon;
+                const isLast = index === verifiedSchemes.length - 1 && verifiedSchemes.length % 2 !== 0;
                 return (
                   <div
                     key={scheme.id}
-                    className="p-7 sm:p-8 rounded-3xl bg-white dark:bg-[#071A38] border border-slate-200 dark:border-[#1A3D73] shadow-xs hover:shadow-xl hover:border-[#D4AF37] transition-all duration-300 flex flex-col justify-between group relative overflow-hidden"
+                    className={`p-7 sm:p-8 rounded-3xl bg-white dark:bg-[#071A38] border border-slate-200 dark:border-[#1A3D73] shadow-xs hover:shadow-xl hover:border-[#D4AF37] transition-all duration-300 flex flex-col justify-between group relative overflow-hidden ${
+                      isLast ? 'lg:col-span-2 lg:max-w-[calc(50%_-_1rem)] lg:mx-auto w-full' : ''
+                    }`}
                   >
                     <div className="space-y-4">
                       {/* Top Header */}

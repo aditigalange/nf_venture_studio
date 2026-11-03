@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { X, ChevronLeft, ChevronRight, Download, Sparkles, FileText, ExternalLink } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { X, ChevronLeft, ChevronRight, FileText, ExternalLink, Sparkles } from 'lucide-react';
 
 interface NFBrochureModalProps {
   isOpen: boolean;
@@ -12,41 +12,102 @@ export const NFBrochureModal: React.FC<NFBrochureModalProps> = ({
   onClose,
   initialPage = 0,
 }) => {
-  const [currentPage, setCurrentPage] = useState(initialPage);
-
+  // Correct Chronological Sequence: Page 1 (Front Cover) to Page 12 (Contact Us)
   const pages = [
-    { title: 'Brochure Cover', subtitle: 'Ideas • Innovation • Growth', file: '/brochures/page_cover.png' },
-    { title: 'Message from the CEO', subtitle: 'Mr. Ashok K Patil, CEO', file: '/brochures/page_ceo_message.png' },
-    { title: 'About NF Venture Studio', subtitle: 'Vision, Mission & Core Roles', file: '/brochures/page_about_studio.png' },
-    { title: 'The Incubator & Ecosystem', subtitle: 'Academic & Corporate Pillars', file: '/brochures/page_ecosystem.png' },
-    { title: 'From Idea to Startup', subtitle: 'Pre-Incubation & Incubation', file: '/brochures/page_pre_incubation.png' },
-    { title: 'The Startup Journey', subtitle: 'A Clear Path from Idea to Growth', file: '/brochures/page_startup_journey.png' },
-    { title: 'Intellectual Property Rights', subtitle: 'Protect Innovation • Build Value', file: '/brochures/page_ipr.png' },
-    { title: "Institution's Innovation Council", subtitle: 'A Culture of Innovation (IIC)', file: '/brochures/page_iic.png' },
-    { title: 'Partnerships & Engagement', subtitle: 'Stronger Together for a Bigger Impact', file: '/brochures/page_partnerships.png' },
-    { title: 'IT Cell Digital Backbone', subtitle: '8 Core Technical Functions', file: '/brochures/page_it_cell.png' },
-    { title: 'Research to Real-World Solutions', subtitle: 'From Research to Real Impact', file: '/brochures/page_research.png' },
-    { title: 'Contact Us', subtitle: "Let's Build the Future Together", file: '/brochures/page_contact.png' },
+    { title: 'Brochure Cover', subtitle: 'Ideas • Innovation • Growth', file: '/brochures/page_contact.png' },
+    { title: 'Message from the CEO', subtitle: 'Mr. Ashok K Patil, CEO', file: '/brochures/page_research.png' },
+    { title: 'About NF Venture Studio', subtitle: 'Vision, Mission & Core Roles', file: '/brochures/page_it_cell.png' },
+    { title: 'The Incubator & Ecosystem', subtitle: 'Academic & Corporate Pillars', file: '/brochures/page_partnerships.png' },
+    { title: 'From Idea to Startup', subtitle: 'Pre-Incubation & Incubation', file: '/brochures/page_cover.png' },
+    { title: 'The Startup Journey', subtitle: 'A Clear Path from Idea to Growth', file: '/brochures/page_ceo_message.png' },
+    { title: 'Intellectual Property Rights', subtitle: 'Protect Innovation • Build Value', file: '/brochures/page_about_studio.png' },
+    { title: "Institution's Innovation Council", subtitle: 'A Culture of Innovation (IIC)', file: '/brochures/page_ecosystem.png' },
+    { title: 'Partnerships & Engagement', subtitle: 'Stronger Together for a Bigger Impact', file: '/brochures/page_pre_incubation.png' },
+    { title: 'IT Cell Digital Backbone', subtitle: '8 Core Technical Functions', file: '/brochures/page_startup_journey.png' },
+    { title: 'Research to Real-World Solutions', subtitle: 'From Research to Real Impact', file: '/brochures/page_ipr.png' },
+    { title: 'Contact Us', subtitle: "Let's Build the Future Together", file: '/brochures/page_iic.png' },
   ];
+
+  const [currentPage, setCurrentPage] = useState(initialPage);
+  const [targetPage, setTargetPage] = useState(initialPage);
+  const [isTurning, setIsTurning] = useState(false);
+  const [turnDirection, setTurnDirection] = useState<'next' | 'prev'>('next');
+  const thumbnailRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const touchStartX = useRef<number | null>(null);
 
   useEffect(() => {
     setCurrentPage(initialPage);
+    setTargetPage(initialPage);
   }, [initialPage]);
 
+  // Auto-scroll thumbnail bar into view
+  useEffect(() => {
+    if (thumbnailRefs.current[currentPage]) {
+      thumbnailRefs.current[currentPage]?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'center',
+      });
+    }
+  }, [currentPage]);
+
+  const goToPage = (newPage: number, explicitDir?: 'next' | 'prev') => {
+    if (newPage === currentPage || isTurning) return;
+    const dir = explicitDir || (newPage > currentPage ? 'next' : 'prev');
+    setTurnDirection(dir);
+    setTargetPage(newPage);
+    setIsTurning(true);
+
+    setTimeout(() => {
+      setCurrentPage(newPage);
+      setIsTurning(false);
+    }, 420);
+  };
+
+  const handleNext = () => {
+    const nextIdx = (currentPage + 1) % pages.length;
+    goToPage(nextIdx, 'next');
+  };
+
+  const handlePrev = () => {
+    const prevIdx = (currentPage - 1 + pages.length) % pages.length;
+    goToPage(prevIdx, 'prev');
+  };
+
+  // Keyboard navigation
   useEffect(() => {
     if (!isOpen) return;
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
-      if (e.key === 'ArrowRight') setCurrentPage((p) => (p + 1) % pages.length);
-      if (e.key === 'ArrowLeft') setCurrentPage((p) => (p - 1 + pages.length) % pages.length);
+      if (e.key === 'ArrowRight') handleNext();
+      if (e.key === 'ArrowLeft') handlePrev();
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose, pages.length]);
+  }, [isOpen, currentPage, isTurning]);
+
+  // Touch Swipe on mobile
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) {
+      if (diff > 0) {
+        handleNext();
+      } else {
+        handlePrev();
+      }
+    }
+    touchStartX.current = null;
+  };
 
   if (!isOpen) return null;
 
   const current = pages[currentPage];
+  const target = pages[targetPage];
 
   return (
     <div
@@ -60,7 +121,7 @@ export const NFBrochureModal: React.FC<NFBrochureModalProps> = ({
         {/* Top Bar */}
         <div className="p-3.5 sm:p-5 border-b border-[#18386B] flex items-center justify-between gap-4 bg-[#0A1A33]/90 shrink-0">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="w-10 h-10 rounded-xl bg-[#1746A2] flex items-center justify-center text-[#D4AF37] shrink-0 border border-[#D4AF37]/30">
+            <div className="w-10 h-10 rounded-xl bg-[#1746A2] flex items-center justify-center text-[#D4AF37] shrink-0 border border-[#D4AF37]/30 shadow-md">
               <FileText className="w-5 h-5" />
             </div>
             <div className="min-w-0">
@@ -99,25 +160,79 @@ export const NFBrochureModal: React.FC<NFBrochureModalProps> = ({
           </div>
         </div>
 
-        {/* Image Preview Canvas */}
-        <div className="relative flex-1 bg-[#050D1C] flex items-center justify-center p-2 sm:p-4 overflow-hidden min-h-[220px] sm:min-h-[420px] md:min-h-[480px]">
-          <img
-            src={current.file}
-            alt={current.title}
-            className="max-h-[55vh] sm:max-h-[70vh] w-auto max-w-full object-contain rounded-xl shadow-2xl border border-white/10"
-          />
+        {/* 3D Realistic Book Stage Canvas */}
+        <div
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+          className="relative flex-1 bg-[#050D1C] flex items-center justify-center p-2 sm:p-4 overflow-hidden min-h-[240px] sm:min-h-[420px] md:min-h-[480px] select-none"
+          style={{ perspective: '1600px' }}
+        >
+          {/* Main 3D Book Container */}
+          <div className="relative max-h-[55vh] sm:max-h-[70vh] flex items-center justify-center">
+
+            {/* Base Incoming Page (Reveals underneath during turn) */}
+            {isTurning && (
+              <div
+                className="absolute inset-0 rounded-xl overflow-hidden shadow-2xl border border-white/10 flex items-center justify-center"
+                style={{
+                  animation: 'pageRevealIn 420ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards',
+                }}
+              >
+                <img
+                  src={target.file}
+                  alt={target.title}
+                  className="max-h-[55vh] sm:max-h-[70vh] w-auto max-w-full object-contain rounded-xl block pointer-events-none"
+                />
+              </div>
+            )}
+
+            {/* Active / Turning Page Leaf */}
+            <div
+              key={`${currentPage}-${turnDirection}-${isTurning ? 'turning' : 'idle'}`}
+              className="relative max-h-[55vh] sm:max-h-[70vh] rounded-xl overflow-hidden shadow-2xl border border-white/10 flex items-center justify-center"
+              style={{
+                transformOrigin: turnDirection === 'next' ? 'left center' : 'right center',
+                animation: isTurning
+                  ? `${turnDirection === 'next' ? 'pageCurlNext' : 'pageCurlPrev'} 420ms cubic-bezier(0.4, 0, 0.2, 1) forwards`
+                  : 'none',
+              }}
+            >
+              <img
+                src={current.file}
+                alt={current.title}
+                className="max-h-[55vh] sm:max-h-[70vh] w-auto max-w-full object-contain rounded-xl block pointer-events-none"
+              />
+
+              {/* Dynamic Paper Sheen / Spine Shadow Overlay */}
+              {isTurning && (
+                <div
+                  className="absolute inset-0 pointer-events-none rounded-xl"
+                  style={{
+                    background:
+                      turnDirection === 'next'
+                        ? 'linear-gradient(to right, rgba(0,0,0,0.45) 0%, rgba(255,255,255,0.18) 35%, rgba(0,0,0,0.65) 100%)'
+                        : 'linear-gradient(to left, rgba(0,0,0,0.45) 0%, rgba(255,255,255,0.18) 35%, rgba(0,0,0,0.65) 100%)',
+                    animation: `${turnDirection === 'next' ? 'sheenSweepNext' : 'sheenSweepPrev'} 420ms ease-out forwards`,
+                  }}
+                />
+              )}
+            </div>
+
+          </div>
 
           {/* Navigation Arrows */}
           <button
-            onClick={() => setCurrentPage((p) => (p - 1 + pages.length) % pages.length)}
-            className="absolute left-3 top-1/2 -translate-y-1/2 p-3 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full bg-black/60 hover:bg-[#1746A2] text-white border border-white/20 transition-all hover:scale-110 shadow-lg cursor-pointer focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:outline-none"
+            onClick={handlePrev}
+            disabled={isTurning}
+            className="absolute left-3 top-1/2 -translate-y-1/2 p-3 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full bg-black/60 hover:bg-[#1746A2] text-white border border-white/20 transition-all hover:scale-110 shadow-lg cursor-pointer focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:outline-none disabled:opacity-50"
             aria-label="Previous page"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
           <button
-            onClick={() => setCurrentPage((p) => (p + 1) % pages.length)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 p-3 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full bg-black/60 hover:bg-[#1746A2] text-white border border-white/20 transition-all hover:scale-110 shadow-lg cursor-pointer focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:outline-none"
+            onClick={handleNext}
+            disabled={isTurning}
+            className="absolute right-3 top-1/2 -translate-y-1/2 p-3 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full bg-black/60 hover:bg-[#1746A2] text-white border border-white/20 transition-all hover:scale-110 shadow-lg cursor-pointer focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:outline-none disabled:opacity-50"
             aria-label="Next page"
           >
             <ChevronRight className="w-5 h-5" />
@@ -129,11 +244,12 @@ export const NFBrochureModal: React.FC<NFBrochureModalProps> = ({
           {pages.map((p, idx) => (
             <button
               key={idx}
-              onClick={() => setCurrentPage(idx)}
+              ref={(el) => { thumbnailRefs.current[idx] = el; }}
+              onClick={() => goToPage(idx)}
               aria-label={`View page ${idx + 1}: ${p.title}`}
               className={`shrink-0 w-12 h-16 sm:w-14 sm:h-20 rounded-lg overflow-hidden border-2 transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:outline-none ${
                 currentPage === idx
-                  ? 'border-[#D4AF37] scale-105 shadow-gold'
+                  ? 'border-[#D4AF37] scale-105 shadow-gold ring-1 ring-[#D4AF37]'
                   : 'border-white/20 opacity-50 hover:opacity-100'
               }`}
             >

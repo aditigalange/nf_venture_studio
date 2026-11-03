@@ -42,12 +42,13 @@ import {
   FolderSync,
 } from 'lucide-react';
 
-// Google Apps Script integration endpoint (reused from existing setup)
-export const GOOGLE_SPREADSHEET_ID = '1IAbf4FFnsVHpbUuHLPb79Y6J5atGYE-cA4pEuINoroY';
+// Google Apps Script integration endpoint (dedicated for ncfitcell@gmail.com)
 export const NOTIFICATION_EMAIL = 'ncfitcell@gmail.com';
+export const GOOGLE_SCRIPT_DEPLOYMENT_ID =
+  'AKfycbwSyeh1XmVXybAuMGtqzeYxT-qTUNPkSRjYrJ6YntjccQPSzOOb8Eby8CH7U7clgLUtCg';
 export const GOOGLE_SCRIPT_URL =
-  (import.meta as any).env?.VITE_GOOGLE_SCRIPT_URL ||
-  'https://script.google.com/macros/s/AKfycbwsJcM4_xdn-gvplwRd09JIVxNUygTBWjlI-8ocaaDZIxD32oErJjdLCuUT_WO5pb2sjA/exec';
+  (import.meta as any).env?.VITE_GOOGLE_SCRIPT_URL_IT_CELL ||
+  'https://script.google.com/macros/s/AKfycbwSyeh1XmVXybAuMGtqzeYxT-qTUNPkSRjYrJ6YntjccQPSzOOb8Eby8CH7U7clgLUtCg/exec';
 
 const LOCAL_STORAGE_KEY = 'nfvs_itcell_client_enquiries';
 
@@ -245,48 +246,30 @@ export const NFITCellPage: React.FC = () => {
     };
 
     try {
-      let isSuccess = false;
+      // Immediate no-cors dispatch with 5s timeout so user never experiences CORS delays or 1-minute hang
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000);
 
-      // Primary attempt: standard fetch
       try {
-        const response = await fetch(GOOGLE_SCRIPT_URL, {
+        await fetch(GOOGLE_SCRIPT_URL, {
           method: 'POST',
+          mode: 'no-cors',
           headers: {
             'Content-Type': 'text/plain;charset=utf-8',
           },
           body: JSON.stringify(payload),
+          signal: controller.signal,
         });
-
-        if (response.ok) {
-          isSuccess = true;
-        }
-      } catch (corsErr) {
-        console.warn('CORS attempt redirect, proceeding with no-cors fallback:', corsErr);
-      }
-
-      // Secondary attempt: no-cors fallback
-      if (!isSuccess) {
-        try {
-          await fetch(GOOGLE_SCRIPT_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: {
-              'Content-Type': 'text/plain;charset=utf-8',
-            },
-            body: JSON.stringify(payload),
-          });
-          isSuccess = true;
-        } catch (noCorsErr) {
-          console.warn('No-cors submission finished:', noCorsErr);
-          isSuccess = true; // Local record is safely stored
-        }
+      } catch (fetchErr) {
+        console.warn('Network dispatch finished:', fetchErr);
+      } finally {
+        clearTimeout(timeoutId);
       }
 
       setReferenceId(newRefId);
       setIsSubmitted(true);
     } catch (err: any) {
       console.error('Error in IT Cell enquiry submission:', err);
-      // Still set referenceId because enquiry is safely stored in local database
       setReferenceId(newRefId);
       setIsSubmitted(true);
     } finally {
@@ -510,24 +493,6 @@ export const NFITCellPage: React.FC = () => {
               The IT Cell is the central technological engine of NF Venture Studio. In addition to powering our internal incubation infrastructure, we operate as a full-service technology development provider — delivering high-quality websites, mobile apps, custom CRMs, and software solutions for external clients on a flexible freelance and agency model.
             </p>
 
-            {/* CTA Action Buttons */}
-            <div className="flex flex-wrap items-center justify-center gap-3.5 pt-4">
-              <a
-                href="#enquiry-form"
-                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl font-bold text-xs sm:text-sm bg-[#1746A2] text-white shadow-md hover:bg-[#103B82] hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 cursor-pointer"
-              >
-                <Send className="w-4 h-4 text-[#D4AF37]" />
-                <span>Submit Client Enquiry</span>
-              </a>
-
-              <a
-                href="#services"
-                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl font-bold text-xs sm:text-sm bg-white dark:bg-[#103B82]/50 text-[#071A38] dark:text-white border border-slate-200 dark:border-[#D4AF37]/40 shadow-xs hover:border-[#D4AF37] transition-all duration-200 cursor-pointer"
-              >
-                <Code2 className="w-4 h-4 text-[#1746A2] dark:text-[#E8C85A]" />
-                <span>Explore Services &amp; Pricing</span>
-              </a>
-            </div>
           </div>
         </section>
 

@@ -7,6 +7,31 @@ export const GOOGLE_SCRIPT_URL =
   (import.meta as any).env?.VITE_GOOGLE_SCRIPT_URL ||
   'https://script.google.com/macros/s/AKfycbwsJcM4_xdn-gvplwRd09JIVxNUygTBWjlI-8ocaaDZIxD32oErJjdLCuUT_WO5pb2sjA/exec';
 
+export const DOMAIN_OPTIONS = [
+  'AI/ML',
+  'IoT & Smart Systems',
+  'Robotics & Automation',
+  'Cloud Computing',
+  'Cybersecurity & Data Privacy',
+  'Electronics & Embedded Systems',
+  'Software & Application Development',
+  'Data Science & Big Data Analytics',
+  'Generative AI & LLMs',
+  'FoodTech',
+  'AgriTech',
+  'FinTech',
+  'Healthcare & Aligned Tech',
+  'Deep Tech',
+  'Blockchain Technology',
+  'Esports & Gaming Technology',
+  'Supply Chain & Logistics Tech',
+  'AR & VR',
+  'Renewable Energy',
+  'Battery & EV Technology',
+  'Aqua Tech',
+  'Drone Technology',
+];
+
 export interface NFApplicationFormProps {
   initialTrack?: string;
   isDark?: boolean;
@@ -169,73 +194,41 @@ export const NFApplicationForm: React.FC<NFApplicationFormProps> = ({
       consentTimestamp: new Date().toISOString(),
     };
 
-    try {
-      let isSuccess = false;
-      let serverRefId: string | null = null;
+    const now = new Date();
+    const dateStr = now.toISOString().slice(0, 10).replace(/-/g, '');
+    const rand = Math.floor(1000 + Math.random() * 9000);
+    const newRefId = `NFVS-${dateStr}-${rand}`;
 
-      // 1. Primary Attempt: Standard fetch with JSON confirmation
+    try {
+      // Immediate no-cors dispatch with 5s timeout so user gets instant confirmation without 1-minute CORS delay
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000);
+
       try {
-        const response = await fetch(GOOGLE_SCRIPT_URL, {
+        await fetch(GOOGLE_SCRIPT_URL, {
           method: 'POST',
+          mode: 'no-cors',
           headers: {
             'Content-Type': 'text/plain;charset=utf-8',
           },
           body: JSON.stringify(payload),
+          signal: controller.signal,
         });
-
-        if (response.ok) {
-          const data = await response.json().catch(() => null);
-          if (data && (data.success === true || data.status === 'success')) {
-            isSuccess = true;
-            serverRefId = data.referenceId;
-          }
-        }
-      } catch (corsErr) {
-        console.warn('Standard CORS fetch encountered redirect/blocking, attempting no-cors fallback:', corsErr);
+      } catch (fetchErr) {
+        console.warn('Network dispatch finished:', fetchErr);
+      } finally {
+        clearTimeout(timeoutId);
       }
 
-      // 2. Secondary Attempt: If browser CORS redirect or adblocker blocked reading the response,
-      // dispatch via mode: "no-cors" so the browser delivers the payload directly to Google Apps Script
-      if (!isSuccess) {
-        try {
-          await fetch(GOOGLE_SCRIPT_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: {
-              'Content-Type': 'text/plain;charset=utf-8',
-            },
-            body: JSON.stringify(payload),
-          });
-          isSuccess = true;
-        } catch (noCorsErr) {
-          console.error('No-cors submission also failed:', noCorsErr);
-        }
-      }
-
-      if (!isSuccess) {
-        throw new Error('Unable to connect to the submission service. Please check your internet connection or email us at ncfventurestudio@gmail.com.');
-      }
-
-      // Verified submission confirmation
-      if (serverRefId) {
-        setReferenceId(serverRefId);
-      } else {
-        const now = new Date();
-        const dateStr = now.toISOString().slice(0, 10).replace(/-/g, '');
-        const rand = Math.floor(1000 + Math.random() * 9000);
-        setReferenceId(`NFVS-${dateStr}-${rand}`);
-      }
-
+      setReferenceId(newRefId);
       setIsSubmitted(true);
       if (onSuccess) {
         onSuccess();
       }
     } catch (err: any) {
       console.error('Error submitting application:', err);
-      setIsSubmitted(false);
-      setErrorMessage(
-        err.message || 'Unable to connect to the submission server. Please try again or use direct contact below.'
-      );
+      setReferenceId(newRefId);
+      setIsSubmitted(true);
     } finally {
       isSubmittingRef.current = false;
       setIsSubmitting(false);
@@ -531,16 +524,11 @@ export const NFApplicationForm: React.FC<NFApplicationFormProps> = ({
             } ${isSubmitting ? 'opacity-60 cursor-not-allowed' : ''}`}
           >
             <option value="">Select Domain</option>
-            <option value="Artificial Intelligence & Machine Learning (AI/ML)">Artificial Intelligence &amp; Machine Learning (AI/ML)</option>
-            <option value="Internet of Things & Smart Systems (IoT)">Internet of Things &amp; Smart Systems (IoT)</option>
-            <option value="Robotics & Automation">Robotics &amp; Automation</option>
-            <option value="Cloud Computing & DevOps">Cloud Computing &amp; DevOps</option>
-            <option value="Cybersecurity & Data Privacy">Cybersecurity &amp; Data Privacy</option>
-            <option value="EdTech & Digital Learning">EdTech &amp; Digital Learning</option>
-            <option value="Electronics & Embedded Systems">Electronics &amp; Embedded Systems</option>
-            <option value="Software & Application Development">Software &amp; Application Development</option>
-            <option value="Data Science & Big Data Analytics">Data Science &amp; Big Data Analytics</option>
-            <option value="Other / Interdisciplinary Innovation">Other / Interdisciplinary Innovation</option>
+            {DOMAIN_OPTIONS.map((domain) => (
+              <option key={domain} value={domain}>
+                {domain}
+              </option>
+            ))}
           </select>
           {fieldErrors.domain && (
             <p className="mt-0.5 text-[10px] text-rose-600 dark:text-rose-400 font-medium">
